@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "266197360506",
+    "project_id": "commentsapp-37a92",
+    "storage_bucket": "commentsapp-37a92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266197360506:android:652321987c5f25947100c3",
+        "android_client_info": {
+          "package_name": "com.csamanez.nttdata.comments_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266197360506-3domh6ge2bm32u2ulqhvomvrqjvlrr0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKVGkc212aDzRbh1kEeNTp7OgJX7pkQ0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266197360506-3domh6ge2bm32u2ulqhvomvrqjvlrr0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
