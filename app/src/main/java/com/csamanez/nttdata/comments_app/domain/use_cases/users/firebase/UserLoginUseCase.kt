@@ -14,8 +14,17 @@ class UserLoginUseCase @Inject constructor(
     operator fun invoke(email: String, password: String): Flow<ResourceUser<Boolean>> = flow {
         try {
             emit(ResourceUser.Loading<Boolean>(true))
-            val statusUserLogin = repository.registerUser(email, password)
+            val statusUserLogin = repository.loginUser(email, password)
             emit(ResourceUser.Success<Boolean>(statusUserLogin))
+            if (!statusUserLogin) {
+                emit(
+                    ResourceUser.Error<Boolean>(
+                        "The password is invalid or the user does not have a password"
+                    )
+                )
+            }
+
+
         } catch (e: HttpException) {
             emit(
                 ResourceUser.Error<Boolean>(

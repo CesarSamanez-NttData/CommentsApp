@@ -1,7 +1,10 @@
 package com.csamanez.nttdata.comments_app.data.repository
 
+import android.util.Log
 import com.csamanez.nttdata.comments_app.domain.repository.UserFirebaseRepository
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserFirebaseRepositoryImpl @Inject constructor(
@@ -15,28 +18,31 @@ class UserFirebaseRepositoryImpl @Inject constructor(
             .addOnCompleteListener { task ->
                 isSuccessfulRegister = task.isSuccessful
 
-//                if (!isSuccessfulRegister) {
-//                    val exception = task.exception
-//                    if (exception is FirebaseException)
-//                        Log.d("ExceptionRepository", exception.message.toString())
-//                }
-            }
+                if (!isSuccessfulRegister) {
+                    val exception = task.exception
+                    if (exception is FirebaseException)
+                        Log.d("Exception Register", exception.message.toString())
+                }
+            }.await()
+
         return isSuccessfulRegister
     }
 
     override suspend fun loginUser(email: String, password: String): Boolean {
         var isSuccessfulLogin = false
 
-        authApi.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                isSuccessfulLogin = task.isSuccessful
+        try {
 
-//                if (!isSuccessfulLogin) {
-//                    val exception = task.exception
-//                    if (exception is FirebaseException)
-//                        Log.d("ExceptionRepository", exception.message.toString())
-//                }
-            }
+            authApi.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    isSuccessfulLogin = task.isSuccessful
+                }.await()
+
+        } catch (e: Exception) {
+            Log.d("Exception Firebase --> ", e.localizedMessage)
+            return false
+        }
+
         return isSuccessfulLogin
     }
 

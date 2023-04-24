@@ -2,26 +2,10 @@ package com.csamanez.nttdata.comments_app.presentation.users.user_login
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -78,7 +62,9 @@ fun UserLoginScreen(
 
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                },
                 label = { Text("Email") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -123,10 +109,6 @@ fun UserLoginScreen(
                 onClick = {
                     if (ValidateForm.validateLoginForm(email, password)) {
                         viewModel.userLoginFirebase(email, password)
-                        navController.navigate(
-                            Screen.CommentListScreen.route +
-                                    "?email=${email}&password=${password}"
-                        )
                     } else {
                         Toast.makeText(
                             context,
@@ -153,14 +135,31 @@ fun UserLoginScreen(
                 Text(text = "Sign Up")
             }
         }
+    }
 
-        if (state.isSuccess) {
-            Toast.makeText(
-                context,
-                "Welcome",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    // Redirect and save credentials in dataStore
+    if (state.isSuccess && state.error.isEmpty()) {
+        Toast.makeText(context, "Welcome", Toast.LENGTH_SHORT).show()
+
+        // Redirect to home
+        navController.navigate(
+            Screen.CommentListScreen.route + "?email=${email}&password=${password}"
+        )
+
+        // Save credential in DataStore
+        viewModel.saveUserCredentialsDataStore(email)
+        state.isSuccess = false
+    }
+
+    // Show error
+    if (!state.error.isNullOrEmpty()) {
+        Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+        state.error = ""
+    }
+
+    // Preload email value from dataStore
+    LaunchedEffect(viewModel.emailState.value) {
+        email = viewModel.emailState.value
     }
 
 }
