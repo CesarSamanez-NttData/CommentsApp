@@ -24,12 +24,9 @@ class CommentListViewModel @Inject constructor(
     private val _state = mutableStateOf(CommentListState())
     val state: State<CommentListState> = _state
 
-    //private val _name = mutableStateOf("")
     var name: String = ""
     var lastname: String = ""
 
-//    private val _lastname = mutableStateOf("")
-//    val lastname: State<String> = _lastname
 
     init {
 
